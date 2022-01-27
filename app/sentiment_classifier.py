@@ -1,4 +1,6 @@
+from operator import pos
 import vader, flair 
+import logging
 
 class SentimentClassifier:
     """Classifier implementing sentiment analysis. Includes open source models 
@@ -51,7 +53,60 @@ class SentimentClassifier:
         self.predictions = None
 
 
-    def predict(text: str) -> None:
+    def _decide_label(self, pos_prob, neg_prob):
+        # if one is missing?
+        if pos_prob is None:
+            return 'negative'
+        elif neg_prob is None:
+            return 'positive'
+
+        # if not, return bigger
+        return 'positive' if pos_prob > neg_prob else 'negative'
+
+
+    def _update_predictions(self, model_name, pos_prob, neg_prob):
+        # updates self.results
+        this_prediction = {
+            'model': model_name,
+            'probs': {'pos': pos_prob, 'neg': neg_prob},
+            'label': self._decide_label(pos_prob, neg_prob),
+        }
+
+        # is it first model in results?
+        if self.predictions is None:
+            self.predictions = [this_prediction]
+        else:
+            self.predictions.append(this_prediction)
+
+
+    def _predict_flair(self):
+        # Predictd sentiment of self.text using flair
+
+        # loading flair
+        flair_clfr = flair.models.TextClassifier.load('en-sentiment')
+
+        # using flair, convert to a sentence object and predict sentiment
+        sentence = flair.data.Sentence(self.text)
+        flair_clfr.predict(sentence)
+        
+        # extract results
+        pos_prob = None
+        neg_prob = None
+        for label in sentence.labels:
+            if label.value == 'POSITIVE':
+                pos_prob = label.score
+            elif label.value == 'NEGATIVE':
+                neg_prob = label.score
+
+        # update results
+        self._update_predictions(
+            'flair',
+            pos_prob,
+            neg_prob,
+        )
+
+
+    def predict(self, text: str) -> None:
         """Runs sentiment predictions for all models.
 
         Parameters
@@ -59,5 +114,14 @@ class SentimentClassifier:
         text : str
             Text to be classified.
         """
-        pass
+        # validate text
+        assert isinstance(text, str), 'Text should be of type string.'
 
+        # throw warning if overwritting, then overwrite
+        if self.text:
+            logging.warning("Overwritting text to be analysed.")
+            self.predictions = None
+        self.text = text
+
+        # call models
+        self._predict_flair()

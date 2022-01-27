@@ -393,6 +393,14 @@ python-versions = "*"
 six = "*"
 
 [[package]]
+name = "logging"
+version = "0.4.9.6"
+description = "A logging module for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "lxml"
 version = "4.7.1"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -1003,7 +1011,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "adda18d74b6c65fc14b718fe8d54d611e6278fd03f7c3cac7ec03860745fe40f"
+content-hash = "6227ad513b4887194f8169369a70943559e770d4503cb50575d396b893554d67"
 
 [metadata.files]
 anyio = [
@@ -1229,6 +1237,9 @@ konoha = [
 langdetect = [
     {file = "langdetect-1.0.9-py2-none-any.whl", hash = "sha256:7cbc0746252f19e76f77c0b1690aadf01963be835ef0cd4b56dddf2a8f1dfc2a"},
     {file = "langdetect-1.0.9.tar.gz", hash = "sha256:cbc1fef89f8d062739774bd51eda3da3274006b3661d199c2655f6b3f6d605a0"},
+]
+logging = [
+    {file = "logging-0.4.9.6.tar.gz", hash = "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"},
 ]
 lxml = [
     {file = "lxml-4.7.1-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:d546431636edb1d6a608b348dd58cc9841b81f4116745857b6cb9f8dadb2725f"},
