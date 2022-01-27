@@ -1,6 +1,10 @@
-from operator import pos
-import vader, flair 
 import logging
+import flair 
+import nltk
+from nltk.sentiment import vader
+
+nltk.download('vader_lexicon')
+
 
 class SentimentClassifier:
     """Classifier implementing sentiment analysis. Includes open source models 
@@ -79,8 +83,26 @@ class SentimentClassifier:
             self.predictions.append(this_prediction)
 
 
+    def _predict_vader(self):
+        # Predictd sentiment of self.text using VADER
+
+        # loading flair
+        vader_clfr = vader.SentimentIntensityAnalyzer()
+
+        # using vader, replace eol and predict sentiment
+        clean_text = self.text.replace('\n',' ')
+        values = vader_clfr.polarity_scores(clean_text)
+
+        # update results
+        self._update_predictions(
+            'VADER',
+            values['pos'],
+            values['neg'],
+        )
+
+
     def _predict_flair(self):
-        # Predictd sentiment of self.text using flair
+        # Predictd sentiment of self.text using FLAIR
 
         # loading flair
         flair_clfr = flair.models.TextClassifier.load('en-sentiment')
@@ -100,7 +122,7 @@ class SentimentClassifier:
 
         # update results
         self._update_predictions(
-            'flair',
+            'FLAIR',
             pos_prob,
             neg_prob,
         )
@@ -124,4 +146,5 @@ class SentimentClassifier:
         self.text = text
 
         # call models
+        self._predict_vader()
         self._predict_flair()
