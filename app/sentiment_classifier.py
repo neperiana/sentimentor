@@ -2,6 +2,9 @@ import logging
 import flair 
 import nltk
 from nltk.sentiment import vader
+import pickle
+import pandas as pd
+from ..model import tools
 
 nltk.download('vader_lexicon')
 
@@ -128,6 +131,28 @@ class SentimentClassifier:
         )
 
 
+    def _predict_homemade(self):
+        # Predict sentiment of self.text using homemade model
+
+        # transforming text to expected dataframe
+        df_text = pd.DataFrame([[self.text]], columns=['text'])
+        X = tools.create_data(df_text, is_train=False)
+
+        # loading model object
+        with open('model/sentiment_cgb.pkl', 'rb') as fl:
+            homemade_clfr = pickle.load(fl)
+
+        # run our model in new data
+        probs = homemade_clfr.predict_proba(X).flatten()
+
+        # update results
+        self._update_predictions(
+            'HOMEMADE',
+            probs[1],
+            probs[0],
+        )
+
+
     def predict(self, text: str) -> None:
         """Runs sentiment predictions for all models.
 
@@ -148,3 +173,4 @@ class SentimentClassifier:
         # call models
         self._predict_vader()
         self._predict_flair()
+        self._predict_homemade()

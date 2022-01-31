@@ -2,7 +2,10 @@
 name = "sentimentor"
 version = "0.1.0"
 description = ""
-authors = ["neperiana <ikbenmila@gmail.com>"]
+authors = ["neperiana @ neperiana.github.io"]
+# packages = [
+#     { include = "model", from = "./../model" },
+# ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -12,9 +15,15 @@ psycopg2-binary = "^2.9.3"
 uvicorn = "^0.17.0"
 flair = "^0.10"
 nltk = "^3.6.7"
+spacy = "^3.2.1"
+pandas = "^1.4.0"
+scikit-learn = "^1.0.2"
+xgboost = "^1.5.2"
+ipykernel = "^6.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+# model = {path = "./model", develop = true }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
