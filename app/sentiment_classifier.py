@@ -4,7 +4,7 @@ import nltk
 from nltk.sentiment import vader
 import pickle
 import pandas as pd
-from ..model import tools
+from model import tools
 
 nltk.download('vader_lexicon')
 
@@ -60,13 +60,16 @@ class SentimentClassifier:
         self.predictions = None
 
 
-    def _decide_label(self, pos_prob, neg_prob):
+    def _decide_label(self, pos_prob, neg_prob, is_homemade=False):
         # if one is missing?
         if pos_prob is None:
             return 'negative'
         elif neg_prob is None:
             return 'positive'
 
+        # homemade model has lower theshold
+        if is_homemade:
+            return 'positive' if pos_prob > 0.4 else 'negative'
         # if not, return bigger
         return 'positive' if pos_prob > neg_prob else 'negative'
 
@@ -76,7 +79,11 @@ class SentimentClassifier:
         this_prediction = {
             'model': model_name,
             'probs': {'pos': pos_prob, 'neg': neg_prob},
-            'label': self._decide_label(pos_prob, neg_prob),
+            'label': self._decide_label(
+                    pos_prob, 
+                    neg_prob, 
+                    is_homemade=model_name=='HOMEMADE',
+                ),
         }
 
         # is it first model in results?
