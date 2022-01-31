@@ -155,8 +155,8 @@ class SentimentClassifier:
         # update results
         self._update_predictions(
             'HOMEMADE',
-            probs[1],
             probs[0],
+            probs[1],
         )
 
 

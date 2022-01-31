@@ -1,8 +1,11 @@
 from pydantic import BaseModel
 from typing import Literal, Optional
 
+# Schema for api input
+class ClassifierInput(BaseModel):
+    text: str
 
-## pydantic schema for Sentiment Classifier Output
+## schema for Sentiment Classifier Output
 class Probabilities(BaseModel):
     pos: Optional[float]
     neg: Optional[float]
