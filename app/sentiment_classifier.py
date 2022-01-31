@@ -4,7 +4,7 @@ import nltk
 from nltk.sentiment import vader
 import pickle
 import pandas as pd
-from model import tools
+import model.tools as tools
 
 nltk.download('vader_lexicon')
 
